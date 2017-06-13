@@ -45,6 +45,7 @@ c.DockerSpawner.debug = True
 # User containers will access hub by container name on the Docker network
 c.JupyterHub.hub_ip = 'jupyterhub'
 c.JupyterHub.hub_port = 8080
+c.NotebookApp.allow_origin = '*'
 
 # TLS config
 c.JupyterHub.port = 80
@@ -56,7 +57,7 @@ c.LDAPAuthenticator.use_ssl = False
 c.LDAPAuthenticator.bind_dn_template = '{username}'                                                                                                                                                                
 c.LDAPAuthenticator.lookup_dn = True                                                                                                                                                                               
 c.LDAPAuthenticator.lookup_dn_search_user = 'CN=Some Guy,ou=NV_Users,ou=Vancouver,ou=HatfieldGroup,dc=HATCON,dc=local'                                                                                          
-c.LDAPAuthenticator.lookup_dn_search_password = 'ThisIsntARealPassword'                                                                                                                                                         
+c.LDAPAuthenticator.lookup_dn_search_password = 'ThisIsntARealPassword'
 c.LDAPAuthenticator.user_search_base = 'OU=HatfieldGroup,DC=HATCON,DC=local'                                                                                                                                       
 c.LDAPAuthenticator.user_attribute = 'sAMAccountName'                                                                                                                                                              
 c.LDAPAuthenticator.create_system_users = True                                                                                                                                                                     
