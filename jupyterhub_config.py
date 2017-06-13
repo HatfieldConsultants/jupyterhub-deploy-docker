@@ -47,13 +47,21 @@ c.JupyterHub.hub_ip = 'jupyterhub'
 c.JupyterHub.hub_port = 8080
 
 # TLS config
-c.JupyterHub.port = 443
-c.JupyterHub.ssl_key = os.environ['SSL_KEY']
-c.JupyterHub.ssl_cert = os.environ['SSL_CERT']
+c.JupyterHub.port = 80
 
-# Authenticate users with GitHub OAuth
-c.JupyterHub.authenticator_class = 'oauthenticator.GitHubOAuthenticator'
-c.GitHubOAuthenticator.oauth_callback_url = os.environ['OAUTH_CALLBACK_URL']
+c.JupyterHub.authenticator_class = 'ldapauthenticator.ldapauthenticator.LDAPLocalAuthenticator'                                                                                                                    
+c.LDAPAuthenticator.server_address = '192.168.10.8'                                                                                                                                                                
+c.LDAPAuthenticator.server_port = 3268                                                                                                                                                                             
+c.LDAPAuthenticator.use_ssl = False                                                                                                                                                                                
+c.LDAPAuthenticator.bind_dn_template = '{username}'                                                                                                                                                                
+c.LDAPAuthenticator.lookup_dn = True                                                                                                                                                                               
+c.LDAPAuthenticator.lookup_dn_search_user = 'CN=Some Guy,ou=NV_Users,ou=Vancouver,ou=HatfieldGroup,dc=HATCON,dc=local'                                                                                          
+c.LDAPAuthenticator.lookup_dn_search_password = 'ThisIsntARealPassword'                                                                                                                                                         
+c.LDAPAuthenticator.user_search_base = 'OU=HatfieldGroup,DC=HATCON,DC=local'                                                                                                                                       
+c.LDAPAuthenticator.user_attribute = 'sAMAccountName'                                                                                                                                                              
+c.LDAPAuthenticator.create_system_users = True                                                                                                                                                                     
+c.Authenticator.add_user_cmd =  ['sudo', 'adduser', '-q', '--gecos', '""', '--disabled-password']                                                                                                                  
+c.LDAPAuthenticator.lookup_dn_user_dn_attribute = 'cn'
 
 # Persist hub data on volume mounted inside container
 data_dir = os.environ.get('DATA_VOLUME_CONTAINER', '/data')
@@ -62,16 +70,5 @@ c.JupyterHub.cookie_secret_file = os.path.join(data_dir,
     'jupyterhub_cookie_secret')
 
 # Whitlelist users and admins
-c.Authenticator.whitelist = whitelist = set()
-c.Authenticator.admin_users = admin = set()
+c.Authenticator.admin_users = {'asoltys', 'jsuwala', 'zlu'}
 c.JupyterHub.admin_access = True
-pwd = os.path.dirname(__file__)
-with open(os.path.join(pwd, 'userlist')) as f:
-    for line in f:
-        if not line:
-            continue
-        parts = line.split()
-        name = parts[0]
-        whitelist.add(name)
-        if len(parts) > 1 and parts[1] == 'admin':
-            admin.add(name)
